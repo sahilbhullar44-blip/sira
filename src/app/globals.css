@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+:root {
+  /* SiRa Custom  /* Red Theme (Replacing Gold) */
+  --gold-primary: #D6001C; /* Main Red from Logo */
+  --gold-secondary: #FF2A2A; /* Lighter Red */
+  --gold-highlight: #FF8F8F; /* Highlight Red */
+  --deep-black: #050505;
+  --rich-black: #0a0a0a;
+  --paper-white: #f5f5f5;
+}
+
+@theme {
+  --color-gold-primary: var(--gold-primary);
+  --color-gold-light: var(--gold-light);
+  --color-gold-dark: var(--gold-dark);
+  --color-deep-black: var(--deep-black);
+  --color-rich-black: var(--rich-black);
+  --color-paper-white: var(--paper-white);
+
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-mulish);
+
+  --animate-spotlight: spotlight 8s ease-in-out infinite;
+  --animate-marquee: marquee 20s linear infinite;
+
+  @keyframes spotlight {
+    0% {
+      opacity: 0.3;
+      transform: scale(0.8) translateY(0);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.2) translateY(-20px);
+    }
+    100% {
+      opacity: 0.3;
+      transform: scale(0.8) translateY(0);
+    }
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  --z-index-1100: 1100;
+  --z-index-1000: 1000;
+  --z-index-100: 100;
+}
+
+body {
+  background-color: var(--deep-black);
+  color: var(--paper-white);
+  font-family: var(--font-mulish), sans-serif;
+  overflow-x: hidden;
+}
+
+/* --- TEXTURE & EFFECTS --- */
+.noise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Gold Gradient Text */
+.text-gold-gradient {
+  background: linear-gradient(to bottom, #f3e5ab, #d4af37, #aa8c2c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent; /* Fallback */
+}
+
+/* Gold Border Gradient */
+.border-gold-gradient {
+  border-image: linear-gradient(to right, #aa8c2c, #f3e5ab, #aa8c2c) 1;
+}
+
+/* Reveal Animation Class */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Glass Effect */
+.glass-effect {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-effect-1 {
+  background: rgba(0, 0, 0, 0.99);
+  backdrop-filter: blur(150px) saturate(3) contrast(1.2) brightness(0.8);
+  -webkit-backdrop-filter: blur(150px) saturate(3) contrast(1.2) brightness(0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Ticket Card */
+.ticket-card {
+  background: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+  transition: transform 0.3s ease;
+}
+
+.ticket-notches::before,
+.ticket-notches::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: var(--deep-black);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+.ticket-notches::before {
+  left: -10px;
+}
+.ticket-notches::after {
+  right: -10px;
+}
+
+.ticket-border-dashed {
+  border-right: 2px dashed #333;
+}
+
+@media (max-width: 768px) {
+  .ticket-border-dashed {
+    border-right: none;
+    border-bottom: 2px dashed #333;
+  }
+}
+
+/* Hover Image Effect */
+.hover-color-img {
+  filter: grayscale(0%) contrast(1.05);
+  transition: transform 0.7s ease, filter 0.5s ease;
+}
+.group:hover .hover-color-img {
+  transform: scale(1.05);
+  filter: contrast(1.1) brightness(1.1);
+}
+
+/* Custom Scrollbar */
+/* Custom Scrollbar - Red/Dark Theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: #7f1d1d; /* Red-900 */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #b91c1c; /* Red-700 */
+}
