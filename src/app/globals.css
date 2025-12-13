@@ -23,6 +23,7 @@
 
   --animate-spotlight: spotlight 8s ease-in-out infinite;
   --animate-marquee: marquee 60s linear infinite;
+  --animate-gradient: gradient 8s ease infinite;
 
   @keyframes spotlight {
     0% {
@@ -48,9 +49,32 @@
     }
   }
 
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
   --z-index-1100: 1100;
   --z-index-1000: 1000;
   --z-index-100: 100;
+}
+
+/* Custom Utilities */
+.bg-300\% {
+  background-size: 300% auto;
 }
 
 body {

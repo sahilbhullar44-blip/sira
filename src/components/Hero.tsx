@@ -1,8 +1,5 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,49 +7,55 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
-  const containerRef = useRef<HTMLElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const spotlightRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null); // Top Text
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline();
 
-      // Cinematic Entrance
-      tl.from(".hero-element", {
-        y: 30,
+      // V4 Reveal: Elegant Fade Up
+      tl.from(".hero-text-reveal", {
+        y: 40,
         opacity: 0,
         duration: 1.2,
-        stagger: 0.2,
+        stagger: 0.15,
         ease: "power3.out",
         delay: 0.2,
-      });
+      })
+        .to(
+          ".hero-divider",
+          {
+            scaleX: 1,
+            duration: 0.8,
+            ease: "power2.out",
+          },
+          "-=0.8"
+        )
+        .to(
+          ".hero-fade-in",
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "power2.out",
+          },
+          "-=0.5"
+        );
 
-      // Simple Parallax on Scroll
-      gsap.to(textRef.current, {
-        y: -50,
-        opacity: 0,
-        scrollTrigger: {
-          trigger: containerRef.current,
-          start: "top top",
-          end: "center top",
-          scrub: true,
-        },
-      });
-
-      // Mouse Movement Parallax for Spotlight
+      // 3D Tilt Effect
       const handleMouseMove = (e: MouseEvent) => {
         if (!containerRef.current) return;
         const { clientX, clientY } = e;
         const { innerWidth, innerHeight } = window;
 
-        const x = (clientX / innerWidth - 0.5) * 2; // -1 to 1
-        const y = (clientY / innerHeight - 0.5) * 2; // -1 to 1
+        const x = (clientX / innerWidth - 0.5) * 2;
+        const y = (clientY / innerHeight - 0.5) * 2;
 
-        gsap.to(spotlightRef.current, {
-          x: x * 50,
-          y: y * 50,
-          duration: 1.5,
+        gsap.to(containerRef.current?.querySelector(".will-change-transform"), {
+          rotateY: x * 5, // Subtle rotation
+          rotateX: -y * 5,
+          duration: 1,
           ease: "power2.out",
         });
       };
@@ -70,80 +73,101 @@ export default function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen min-h-[800px] flex items-center justify-center overflow-hidden bg-transparent"
+      className="relative min-h-screen w-full bg-[#050505] flex items-center justify-center p-4 sm:p-8 md:p-12 overflow-hidden perspective-1000"
     >
-      {/* Background - Simple Global Style */}
-      <div className="absolute inset-0 z-0 bg-transparent">
-        {/* Global Background + noise overlay from layout */}
-      </div>
-
-      {/* Main Content - Centered & Grand */}
+      {/* 1. Floating Video Canvas with 3D Tilt */}
       <div
-        ref={textRef}
-        className="relative z-20 text-center px-4 max-w-5xl mx-auto flex flex-col items-center"
+        className="relative w-full max-w-[1600px] aspect-4/5 sm:aspect-square md:aspect-video rounded-4xl sm:rounded-[3rem] overflow-hidden shadow-2xl transition-transform duration-100 ease-out will-change-transform"
+        style={{ transformStyle: "preserve-3d" }}
       >
-        {/* Spotlight - Specifically behind the text */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -z-10 pointer-events-none">
-          <div
-            ref={spotlightRef}
-            className="w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-red-500/15 rounded-full blur-[120px] mix-blend-screen animate-[pulse_4s_ease-in-out_infinite]"
-          ></div>
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover scale-105"
+          >
+            <source
+              src="https://videos.pexels.com/video-files/2022395/2022395-hd_1920_1080_30fps.mp4"
+              type="video/mp4"
+            />
+          </video>
+          {/* Elegant Dark Overlay */}
+          <div className="absolute inset-0 bg-black/30 mix-blend-multiply"></div>
+          {/* Subtle Grain */}
+          <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none"></div>
         </div>
 
-        {/* Badge */}
-        <div className="hero-element mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-red-500/30 bg-red-900/10 backdrop-blur-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></span>
-            <span className="text-red-200 text-xs uppercase tracking-[0.3em] font-medium">
-              Est. 2025 • Canada
-            </span>
+        {/* 2. Centered Content Layer */}
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center p-6 sm:p-12 transform-style-3d translate-z-20">
+          {/* Top Badge */}
+          <div className="mb-8 opacity-0 hero-fade-in translate-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-black/20 backdrop-blur-md">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+              <span className="text-white/90 text-[10px] sm:text-xs uppercase tracking-[0.2em] font-medium">
+                Est. 2025 • Canada
+              </span>
+            </div>
+          </div>
+
+          {/* Main Headline - Perfectly Balanced */}
+          <div className="flex flex-col items-center gap-2 sm:gap-4 mix-blend-difference text-white">
+            <h1 className="hero-text-reveal overflow-hidden font-serif font-bold text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tight">
+              LEGENDS
+            </h1>
+            <span className="hero-divider w-12 h-[2px] bg-red-500 scale-x-0"></span>
+            <h1 className="hero-text-reveal overflow-hidden font-serif font-bold text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tight italic">
+              COME ALIVE
+            </h1>
+          </div>
+
+          {/* Description - Restored */}
+          <div className="mt-8 max-w-lg mx-auto opacity-0 hero-fade-in translate-y-4">
+            <p className="text-white/80 text-base sm:text-lg font-light leading-relaxed tracking-wide drop-shadow-md">
+              SiRa Entertainment curates world-class experiences. We bridge the
+              gap between iconic artists and the audiences who adore them.
+            </p>
+          </div>
+
+          {/* Bottom Action */}
+          <div className="mt-10 opacity-0 hero-fade-in translate-y-4 flex flex-col sm:flex-row items-center gap-6">
+            <button
+              onClick={() => window.openModal?.("Tickets")}
+              className="group relative px-8 py-4 bg-white text-black font-bold text-xs sm:text-sm tracking-widest uppercase overflow-hidden hover:scale-105 transition-transform duration-300 min-w-[160px]"
+            >
+              <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+              <span className="relative z-10 group-hover:text-white transition-colors duration-300 flex items-center justify-center gap-2">
+                Book Tickets
+              </span>
+            </button>
+
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                window.lenis?.scrollTo("#events");
+              }}
+              className="group relative px-8 py-4 bg-transparent border border-white/30 text-white font-bold text-xs sm:text-sm tracking-widest uppercase overflow-hidden hover:scale-105 transition-transform duration-300 min-w-[160px]"
+            >
+              <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+              <span className="relative z-10 group-hover:text-black transition-colors duration-300 flex items-center justify-center gap-2">
+                Discover
+              </span>
+            </button>
           </div>
         </div>
-
-        {/* Headline */}
-        <h1 className="hero-element font-serif font-bold text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-white leading-[0.9] tracking-tight mb-8 drop-shadow-2xl">
-          LEGENDS
-          <br />
-          <span className="text-red-600 italic">COME ALIVE</span>
-        </h1>
-
-        {/* Description */}
-        <p className="hero-element text-gray-300 text-base md:text-xl font-light max-w-2xl mx-auto leading-relaxed mb-12">
-          SiRa Entertainment curates world-class experiences. We bridge the gap
-          between iconic artists and the audiences who adore them.
-        </p>
-
-        {/* Actions */}
-        <div className="hero-element flex flex-col sm:flex-row items-center gap-6">
-          <button
-            onClick={() => window.openModal?.("Tickets")}
-            className="group relative px-10 py-5 bg-red-700 hover:bg-red-800 transition-all duration-300 text-white font-bold text-sm tracking-widest uppercase overflow-hidden shadow-[0_0_40px_rgba(185,28,28,0.4)] hover:shadow-[0_0_60px_rgba(185,28,28,0.6)] hover:-translate-y-1"
-          >
-            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1s_infinite]"></div>
-            <span className="relative flex items-center gap-3">
-              Upcoming Shows <ArrowRight className="w-5 h-5" />
-            </span>
-          </button>
-
-          <Link
-            href="#about"
-            onClick={(e) => {
-              e.preventDefault();
-              window.lenis?.scrollTo("#about");
-            }}
-            className="text-white/70 hover:text-red-400 uppercase tracking-[0.2em] text-xs border-b border-transparent hover:border-red-500 transition-all pb-1"
-          >
-            Discover More
-          </Link>
-        </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hero-element flex flex-col items-center gap-2 opacity-60">
-        <span className="text-[10px] tracking-[0.3em] font-medium text-white uppercase animate-pulse">
-          Scroll
+      {/* Decorative Branding - Outside the Frame */}
+      <div className="absolute bottom-6 left-8 hidden md:block opacity-40">
+        <span className="text-[10px] font-mono tracking-widest text-white/50">
+          SIRA ENTERTAINMENT
         </span>
-        <div className="w-px h-12 bg-linear-to-b from-white to-transparent"></div>
+      </div>
+      <div className="absolute bottom-6 right-8 hidden md:block opacity-40">
+        <span className="text-[10px] font-mono tracking-widest text-white/50">
+          Est. Canada
+        </span>
       </div>
     </section>
   );
