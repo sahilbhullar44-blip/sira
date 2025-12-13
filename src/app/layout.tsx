@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Mulish } from "next/font/google";
+import { Syne } from "next/font/google";
 import "./globals.css";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const syne = Syne({
+  variable: "--font-syne",
   subsets: ["latin"],
   display: "swap",
-  weight: ["400", "600", "700"],
-  style: ["normal", "italic"],
-});
-
-const mulish = Mulish({
-  variable: "--font-mulish",
-  subsets: ["latin"],
-  display: "swap",
-  weight: ["300", "400", "600"],
+  weight: ["400", "500", "600", "700", "800"], // Syne has unique weights, useful for bold headers
 });
 
 export const metadata: Metadata = {
@@ -31,9 +23,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${playfair.variable} ${mulish.variable} antialiased selection:bg-red-700 selection:text-white`}
+        className={`${syne.variable} antialiased selection:bg-red-700 selection:text-white`}
       >
         <SmoothScroller />
         <div className="noise-overlay" />

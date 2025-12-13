@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
@@ -100,7 +101,7 @@ export default function Hero() {
         </div>
 
         {/* Headline */}
-        <h1 className="hero-element font-serif text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-white leading-[0.9] tracking-tight mb-8 drop-shadow-2xl">
+        <h1 className="hero-element font-serif font-bold text-4xl sm:text-6xl md:text-8xl lg:text-9xl text-white leading-[0.9] tracking-tight mb-8 drop-shadow-2xl">
           LEGENDS
           <br />
           <span className="text-red-600 italic">COME ALIVE</span>

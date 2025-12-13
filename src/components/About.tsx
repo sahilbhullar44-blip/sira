@@ -2,6 +2,7 @@
 
 import { GSAPReveal } from "./GSAPReveal";
 import Image from "next/image";
+import Counter from "./Counter";
 
 export default function About() {
   return (
@@ -33,7 +34,7 @@ export default function About() {
         {/* Content */}
         <div className="space-y-8 mt-12 lg:mt-0">
           <GSAPReveal delay={0.2}>
-            <h2 className="font-serif text-4xl sm:text-5xl md:text-6xl text-white leading-none text-center lg:text-left">
+            <h2 className="font-serif font-bold text-4xl sm:text-5xl md:text-6xl text-white leading-none text-center lg:text-left">
               THE <span className="text-red-600 block pl-0 ">ARCHITECTS</span>{" "}
               OF SOUND
             </h2>
@@ -55,7 +56,7 @@ export default function About() {
             <div className="grid grid-cols-3 gap-4 md:gap-8 border-t border-white/10 pt-8 mt-8">
               <div className="text-center lg:text-left">
                 <span className="block text-2xl md:text-3xl font-bold text-white mb-1">
-                  50+
+                  <Counter target={50} suffix="+" />
                 </span>
                 <span className="text-[10px] md:text-xs uppercase tracking-widest text-gray-500">
                   Sold Out Shows
@@ -63,7 +64,7 @@ export default function About() {
               </div>
               <div className="text-center lg:text-left">
                 <span className="block text-2xl md:text-3xl font-bold text-white mb-1">
-                  100k+
+                  <Counter target={100} suffix="k+" />
                 </span>
                 <span className="text-[10px] md:text-xs uppercase tracking-widest text-gray-500">
                   Attendees
@@ -71,7 +72,7 @@ export default function About() {
               </div>
               <div className="text-center lg:text-left">
                 <span className="block text-2xl md:text-3xl font-bold text-white mb-1">
-                  5+
+                  <Counter target={5} suffix="+" />
                 </span>
                 <span className="text-[10px] md:text-xs uppercase tracking-widest text-gray-500">
                   Cities

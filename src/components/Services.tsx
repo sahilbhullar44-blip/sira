@@ -9,7 +9,7 @@ export default function Services() {
       <div className="max-w-6xl mx-auto">
         <GSAPReveal>
           <div className="text-center mb-16 md:mb-20">
-            <h2 className="font-serif text-4xl md:text-5xl text-white mb-4">
+            <h2 className="font-serif font-bold text-4xl md:text-5xl text-white mb-4">
               Our Services
             </h2>
             <p className="text-gray-500 italic font-serif">
@@ -30,7 +30,7 @@ export default function Services() {
               </div>
 
               <div className="flex-1 p-8 md:p-12 flex flex-col justify-center border border-white/5 border-l-0">
-                <h3 className="font-serif text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
+                <h3 className="font-serif font-bold text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
                   Artist Tours
                 </h3>
                 <p className="text-gray-400 font-light leading-relaxed max-w-2xl text-sm md:text-base">
@@ -53,7 +53,7 @@ export default function Services() {
               </div>
 
               <div className="flex-1 p-8 md:p-12 flex flex-col justify-center border border-white/5 border-l-0">
-                <h3 className="font-serif text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
+                <h3 className="font-serif font-bold text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
                   Event Production
                 </h3>
                 <p className="text-gray-400 font-light leading-relaxed max-w-2xl text-sm md:text-base">
@@ -76,7 +76,7 @@ export default function Services() {
               </div>
 
               <div className="flex-1 p-6 md:p-12 flex flex-col justify-center border border-white/5 border-l-0">
-                <h3 className="font-serif text-2xl md:text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
+                <h3 className="font-serif font-bold text-2xl md:text-3xl text-white mb-3 group-hover:text-red-600 transition-colors">
                   Promotion & PR
                 </h3>
                 <p className="text-gray-400 font-light leading-relaxed max-w-2xl text-sm md:text-base">

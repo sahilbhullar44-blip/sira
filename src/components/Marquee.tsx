@@ -1,17 +1,18 @@
 import { Star } from "lucide-react";
 
 export default function Marquee() {
-  const items = [
-    "LIVE CONCERTS",
-    "BOLLYWOOD STARS",
-    "GLOBAL TOURS",
-    "CULTURAL EVENTS",
-    "PREMIER PRODUCTION",
+  const baseItems = [
+    "Germany — 785 15h Street, Office 478 Berlin, De 81566",
+    "Get In Touch — phone: +1(800)123-4566",
+    "Open Hours : Mon-Fri: 9 AM – 6 PM Saturday: 9 AM – 4 PM Sunday: Closed",
   ];
+
+  // Duplicate items to ensure sufficient width for larger screens
+  const items = [...baseItems, ...baseItems];
 
   return (
     <div className="bg-red-700 text-white py-2 overflow-hidden relative z-20 border-y border-red-800 shadow-[0_0_30px_rgba(220,38,38,0.4)]">
-      <div className="animate-marquee flex items-center whitespace-nowrap min-w-full">
+      <div className="animate-marquee flex items-center whitespace-nowrap w-max will-change-transform">
         {/* First Set */}
         {items.map((item, i) => (
           <div key={`a-${i}`} className="flex items-center mx-8">

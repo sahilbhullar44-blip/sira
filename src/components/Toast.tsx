@@ -27,7 +27,7 @@ export default function Toast() {
           <CheckCircle className="w-6 h-6" />
         </div>
         <div>
-          <h4 className="font-serif text-lg">Request Received</h4>
+          <h4 className="font-serif font-bold text-lg">Request Received</h4>
           <p className="text-xs text-gray-400">We will be in touch shortly.</p>
         </div>
       </div>

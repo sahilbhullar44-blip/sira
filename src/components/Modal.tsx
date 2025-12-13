@@ -7,6 +7,7 @@ export default function Modal() {
   const [isOpen, setIsOpen] = useState(false);
   const [context, setContext] = useState<"Contact" | "Tickets">("Contact");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -87,6 +88,7 @@ export default function Modal() {
         window.dispatchEvent(new CustomEvent("show-toast"));
       }
       setEmail("");
+      setPhone("");
     }, 1500);
   };
 
@@ -117,7 +119,7 @@ export default function Modal() {
         </button>
 
         <div className="text-center mb-6 md:mb-10">
-          <h2 className="font-serif text-2xl md:text-3xl text-white mb-2">
+          <h2 className="font-serif font-bold text-2xl md:text-3xl text-white mb-2">
             {context === "Tickets" ? "Book Tickets" : "Contact Us"}
           </h2>
           <div className="w-16 h-px bg-red-700 mx-auto"></div>
@@ -140,6 +142,19 @@ export default function Modal() {
                 Please provide a valid email.
               </p>
             )}
+          </div>
+
+          <div>
+            <label className="block text-xs uppercase tracking-widest text-gray-400 mb-2">
+              Phone Number (Optional)
+            </label>
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 000-0000"
+              className="w-full bg-[#0a0a0a] border border-white/10 focus:border-red-600 text-white py-4 px-4 focus:outline-none transition-colors font-serif placeholder-gray-600"
+            />
           </div>
 
           <button

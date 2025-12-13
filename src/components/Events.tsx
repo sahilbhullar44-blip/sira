@@ -10,15 +10,23 @@ export default function Events() {
       <div className="max-w-7xl mx-auto">
         <GSAPReveal>
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 border-b border-white/10 pb-6 gap-4">
-            <h2 className="font-serif text-4xl md:text-5xl text-white">
+            <h2 className="font-serif font-bold text-4xl md:text-5xl text-white">
               Past Events
             </h2>
-            <Link
-              href="#"
-              className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors"
-            >
-              View Archive
-            </Link>
+            <div className="flex items-center gap-6">
+              <Link
+                href="/upcoming-events"
+                className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors"
+              >
+                View Upcoming
+              </Link>
+              <Link
+                href="/past-events"
+                className="text-sm uppercase tracking-widest hover:text-red-600 transition-colors"
+              >
+                View Archive
+              </Link>
+            </div>
           </div>
         </GSAPReveal>
 
@@ -43,7 +51,7 @@ export default function Events() {
               </div>
               <div className="flex justify-between items-start border-t border-white/5 pt-4 group-hover:border-red-600/30 transition-colors">
                 <div>
-                  <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
+                  <h3 className="font-serif font-bold text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
                     Vishal & Shekhar
                   </h3>
                   <p className="text-sm text-gray-500 uppercase tracking-widest group-hover:text-gray-400">
@@ -77,7 +85,7 @@ export default function Events() {
               </div>
               <div className="flex justify-between items-start border-t border-white/5 pt-4 group-hover:border-red-600/30 transition-colors">
                 <div>
-                  <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
+                  <h3 className="font-serif font-bold text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
                     Bollywood Nights
                   </h3>
                   <p className="text-sm text-gray-500 uppercase tracking-widest group-hover:text-gray-400">
@@ -111,7 +119,7 @@ export default function Events() {
               </div>
               <div className="flex justify-between items-start border-t border-white/5 pt-4 group-hover:border-red-600/30 transition-colors">
                 <div>
-                  <h3 className="font-serif text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
+                  <h3 className="font-serif font-bold text-2xl text-white mb-1 group-hover:text-red-500 transition-colors duration-300">
                     Summer Jam
                   </h3>
                   <p className="text-sm text-gray-500 uppercase tracking-widest group-hover:text-gray-400">

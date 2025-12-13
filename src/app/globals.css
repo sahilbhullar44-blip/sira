@@ -18,11 +18,11 @@
   --color-rich-black: var(--rich-black);
   --color-paper-white: var(--paper-white);
 
-  --font-serif: var(--font-playfair);
-  --font-sans: var(--font-mulish);
+  --font-serif: var(--font-syne);
+  --font-sans: var(--font-syne);
 
   --animate-spotlight: spotlight 8s ease-in-out infinite;
-  --animate-marquee: marquee 20s linear infinite;
+  --animate-marquee: marquee 60s linear infinite;
 
   @keyframes spotlight {
     0% {
@@ -56,7 +56,7 @@
 body {
   background-color: var(--deep-black);
   color: var(--paper-white);
-  font-family: var(--font-mulish), sans-serif;
+  font-family: var(--font-syne), sans-serif;
   overflow-x: hidden;
 }
 
