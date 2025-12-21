@@ -150,7 +150,7 @@ export default function Hero() {
           {/* Main Headline - Perfectly Balanced */}
           <div className="flex flex-col items-center gap-1 sm:gap-4 mix-blend-difference text-white">
             <h1 className="hero-text-reveal overflow-hidden font-serif font-bold text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tight">
-              LEGENDS
+              WHERE LEGENDS
             </h1>
             <span className="hero-divider w-8 sm:w-12 h-[2px] bg-red-500 scale-x-0"></span>
             <h1 className="hero-text-reveal overflow-hidden font-serif font-bold text-5xl sm:text-7xl md:text-8xl lg:text-9xl leading-[0.9] tracking-tight italic">
