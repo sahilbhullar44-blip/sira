@@ -88,6 +88,10 @@ export default function Modal() {
       } else {
         // Trigger Toast
         window.dispatchEvent(new CustomEvent("show-toast"));
+        // Reset Inquiry Fields
+        setFirstName("");
+        setLastName("");
+        setMessage("");
       }
 
       setEmail("");
@@ -136,7 +140,9 @@ export default function Modal() {
           </h2>
           {/* Tag Line */}
           <p className="text-white/70 text-sm md:text-base mb-4 font-light tracking-wide">
-            Proceed to Ticketmaster to move ahead.
+            {context === "Tickets"
+              ? "Proceed to Ticketmaster to move ahead."
+              : "Get in touch with us for any enquiries."}
           </p>
           <div className="w-16 h-px bg-red-700 mx-auto"></div>
         </div>
