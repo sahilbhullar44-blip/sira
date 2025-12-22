@@ -68,9 +68,8 @@ export default function Modal() {
       setEmail("");
       closeModal();
     } catch (err) {
-      console.error(err);
-
-      alert("Something went wrong. Please try again.");
+      console.error("Error submitting form:", err);
+      alert(`Something went wrong: ${err instanceof Error ? err.message : "Please try again."}`);
     } finally {
       setLoading(false);
     }
