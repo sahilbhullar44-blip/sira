@@ -52,7 +52,10 @@ export default function Modal() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to submit");
+        const errorData = await res.json();
+        throw new Error(
+          errorData.details || errorData.error || "Failed to submit"
+        );
       }
 
       if (context === "Tickets") {
@@ -69,7 +72,11 @@ export default function Modal() {
       closeModal();
     } catch (err) {
       console.error("Error submitting form:", err);
-      alert(`Something went wrong: ${err instanceof Error ? err.message : "Please try again."}`);
+      alert(
+        `Something went wrong: ${
+          err instanceof Error ? err.message : "Please try again."
+        }`
+      );
     } finally {
       setLoading(false);
     }
