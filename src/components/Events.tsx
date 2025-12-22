@@ -71,7 +71,7 @@ export default function Events() {
               <div className="absolute inset-0 bg-red-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"></div>
               <div className="relative overflow-hidden aspect-3/4 mb-6 border border-white/10 group-hover:border-red-600/30 transition-all duration-500">
                 <Image
-                  src="/assets/events/ninety.png"
+                  src="/assets/events/vs.jpg"
                   alt="Unforgettable 90's Concert"
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110 group-hover:grayscale-0 grayscale"
