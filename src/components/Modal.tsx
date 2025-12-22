@@ -7,7 +7,14 @@ export default function Modal() {
   const [isOpen, setIsOpen] = useState(false);
   const [context, setContext] = useState<"Contact" | "Tickets">("Contact");
   const [email, setEmail] = useState("");
+
   // const [phone, setPhone] = useState(""); // Unused
+
+  // New Inquiry State
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [message, setMessage] = useState("");
+
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -33,23 +40,38 @@ export default function Modal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate email or phone (simple check for non-empty)
-    if (!email || email.length < 3) {
-      setError(true);
-      return;
-    }
+
     setError(false);
     setLoading(true);
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_URL || "";
-      const res = await fetch(`${baseUrl}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ emailOrPhone: email }),
-      });
+      let res;
+
+      if (context === "Contact") {
+        if (!firstName || !lastName || !email || !message) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+        res = await fetch(`${baseUrl}/api/inquire`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ firstName, lastName, email, message }),
+        });
+      } else {
+        // Tickets context
+        if (!email || email.length < 3) {
+          setError(true);
+          setLoading(false);
+          return;
+        }
+        res = await fetch(`${baseUrl}/api/contact`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ emailOrPhone: email }),
+        });
+      }
 
       if (!res.ok) {
         const errorData = await res.json();
@@ -119,21 +141,65 @@ export default function Modal() {
           <div className="w-16 h-px bg-red-700 mx-auto"></div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="relative group">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email or phone"
-              className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-red-600 transition-colors duration-300 text-center font-serif rounded-sm"
-            />
-            {error && (
-              <p className="text-red-500 text-xs mt-2 text-center">
-                Please provide a valid email or phone number.
-              </p>
-            )}
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+          {context === "Tickets" ? (
+            <div className="relative group">
+              <input
+                type="text"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email or phone"
+                className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-lg focus:outline-none focus:ring-2 focus:ring-red-600 transition-colors duration-300 text-center font-serif rounded-sm"
+              />
+              {error && (
+                <p className="text-red-500 text-xs mt-2 text-center">
+                  Please provide a valid email or phone number.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* First Name & Last Name */}
+              <div className="grid grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  placeholder="First Name"
+                  className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 font-serif rounded-sm"
+                />
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  placeholder="Last Name"
+                  className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 font-serif rounded-sm"
+                />
+              </div>
+
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your Email"
+                className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 font-serif rounded-sm"
+              />
+
+              <textarea
+                rows={4}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Your Message"
+                className="w-full bg-white text-black placeholder-gray-500 border-none py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-red-600 font-serif rounded-sm resize-none"
+              ></textarea>
+
+              {error && (
+                <p className="text-red-500 text-xs text-center">
+                  Please fill in all fields correctly.
+                </p>
+              )}
+            </div>
+          )}
 
           <button
             type="submit"
