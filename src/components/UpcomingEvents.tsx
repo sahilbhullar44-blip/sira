@@ -24,7 +24,7 @@ export default function UpcomingEvents() {
             <div className="relative aspect-4/5 w-full max-w-md mx-auto lg:max-w-none border border-white/10 rounded-sm overflow-hidden group">
               <div className="absolute inset-0 bg-red-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"></div>
               <Image
-                src="/assets/events/vishal-sheykhar-poster-new.jpg"
+                src="/assets/events/vishal-sheykhar-live-2026.jpg"
                 alt="The Superhit Tour: Vishal and Sheykhar Live in Edmonton"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -61,7 +61,7 @@ export default function UpcomingEvents() {
                     Time
                   </span>
                   <span className="text-white font-medium">
-                    Doors Open 6:30 PM | Show Start 7:00 PM
+                    Doors Open 6:00 PM | Show Start 8:00 PM
                   </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
@@ -70,6 +70,14 @@ export default function UpcomingEvents() {
                   </span>
                   <span className="text-white font-medium">
                     Edmonton Expo Centre
+                  </span>
+                </div>
+                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
+                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
+                    Address
+                  </span>
+                  <span className="text-white font-medium">
+                    7515 118 Ave NW, Edmonton, AB T5B 0J2
                   </span>
                 </div>
                 <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4">
