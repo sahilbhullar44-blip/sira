@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     } catch (error) {
         console.error('API Error:', error);
         return NextResponse.json(
-            { error: 'Internal Server Error' },
+            { error: 'Internal Server Error', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         );
     }
