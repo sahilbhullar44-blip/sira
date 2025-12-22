@@ -24,8 +24,9 @@ export default function About() {
             {/* Magazine Style Floating Text */}
             <div className="absolute -bottom-6 right-0 md:-bottom-8 md:right-10 lg:-bottom-10 lg:-right-4 bg-black/90 backdrop-blur-md p-6 md:p-8 lg:p-10 border-l-4 border-red-700 max-w-[280px] md:max-w-sm z-20 shadow-xl">
               <p className="font-serif text-xl md:text-2xl lg:text-3xl text-white italic leading-tight">
-                &quot;We don&apos;t just host events. We craft{" "}
-                <span className="text-red-600 font-bold">legacies.</span>&quot;
+                &quot;Collaboration is{" "}
+                <span className="text-red-600 font-bold">vital</span> to our
+                success.&quot;
               </p>
             </div>
           </div>
@@ -35,8 +36,8 @@ export default function About() {
         <div className="space-y-8 mt-12 lg:mt-0">
           <GSAPReveal delay={0.2}>
             <h2 className="font-serif font-bold text-4xl sm:text-5xl md:text-6xl text-white leading-none text-center lg:text-left">
-              THE <span className="text-red-600 block pl-0 ">ARCHITECTS</span>{" "}
-              OF SOUND
+              FUELED BY{" "}
+              <span className="text-red-600 block pl-0 ">PASSION</span>
             </h2>
           </GSAPReveal>
 
@@ -44,10 +45,20 @@ export default function About() {
             <div className="flex gap-4 max-w-2xl mx-auto lg:mx-0">
               <div className="w-px h-16 md:h-24 bg-red-600 shrink-0"></div>
               <p className="text-gray-400 font-light leading-relaxed text-base md:text-lg text-left">
-                Founded on the principle that live music is a spiritual
-                experience. SiRa Entertainment has quickly ascended to become
-                Canada&apos;s premier boutique production house for South Asian
-                and Global heavyweights.
+                At SiRa Entertainment, we are fueled by an unwavering passion
+                for entertainment and a dedication to excellence. Our mission is
+                to craft unforgettable experiences that resonate with our
+                audience. We pride ourselves on delivering world-class
+                productions marked by integrity, professionalism, and
+                innovation, ensuring every event surpasses expectations.
+                <br />
+                <br />
+                Our collaboration with{" "}
+                <span className="text-white font-medium">
+                  Shri Balaji Entertainment
+                </span>
+                , who has over 30 years of experience, will be driven by a
+                commitment to inspire, entertain, and create lasting memories.
               </p>
             </div>
           </GSAPReveal>
