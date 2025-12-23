@@ -49,8 +49,8 @@ export default function PastEvents() {
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-60"></div>
                 <div className="absolute bottom-4 left-4 right-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 delay-100">
-                  <span className="inline-block px-3 py-1 bg-red-700 text-white text-[10px] uppercase tracking-widest font-bold">
-                    Sold Out
+                  <span className="inline-block px-3 py-1 bg-white text-black text-[10px] uppercase tracking-widest font-bold">
+                 Past Event
                   </span>
                 </div>
               </div>
