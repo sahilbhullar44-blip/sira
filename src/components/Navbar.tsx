@@ -33,7 +33,7 @@ export default function Navbar() {
         <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-8 h-20 md:h-28 flex justify-between items-center relative">
           {/* LEFT SECTION: Balaji Logo (Pinned) */}
           <div className="hidden md:flex items-center">
-            <div className="relative h-12 w-12 xl:h-16 xl:w-16">
+            <Link href="/" className="relative h-12 w-12 xl:h-16 xl:w-16">
               <Image
                 src="/assets/logos/balaji.png"
                 alt="Balaji Logo"
@@ -41,7 +41,7 @@ export default function Navbar() {
                 className="object-contain"
                 priority
               />
-            </div>
+            </Link>
           </div>
 
           {/* CENTER ELEMENTS - ABSOLUTE POSITIONING FOR PERFECT CENTER */}
@@ -49,10 +49,12 @@ export default function Navbar() {
           {/* 1. Navigation Links (Left of Center) */}
           <div className="hidden md:flex absolute right-[50%] top-1/2 -translate-y-1/2 items-center gap-6 xl:gap-8 mr-16 xl:mr-20">
             <Link
-              href="#about"
+              href="/#about"
               onClick={(e) => {
-                e.preventDefault();
-                window.lenis?.scrollTo("#about");
+                if (window.location.pathname === "/") {
+                  e.preventDefault();
+                  window.lenis?.scrollTo("#about");
+                }
               }}
               className="px-5 py-2 text-xs xl:text-sm uppercase tracking-widest hover:bg-red-700 hover:text-white transition-all duration-300 cursor-pointer rounded-sm"
             >
@@ -62,10 +64,12 @@ export default function Navbar() {
             {/* Events Dropdown */}
             <div className="relative group">
               <Link
-                href="#events"
+                href="/#events"
                 onClick={(e) => {
-                  e.preventDefault();
-                  window.lenis?.scrollTo("#events");
+                  if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    window.lenis?.scrollTo("#events");
+                  }
                 }}
                 className="px-5 py-2 text-xs xl:text-sm uppercase tracking-widest hover:bg-red-700 hover:text-white transition-all duration-300 cursor-pointer flex items-center gap-2 group-hover:bg-red-700 group-hover:text-white rounded-sm"
               >
@@ -187,11 +191,13 @@ export default function Navbar() {
             {/* Navigation Links */}
             <div className="flex flex-col gap-10 flex-1">
               <Link
-                href="#about"
+                href="/#about"
                 onClick={(e) => {
-                  e.preventDefault();
                   closeMobileMenu();
-                  window.lenis?.scrollTo("#about");
+                  if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    window.lenis?.scrollTo("#about");
+                  }
                 }}
                 className="group flex items-end gap-4 border-b border-white/5 pb-4"
               >
@@ -224,11 +230,13 @@ export default function Navbar() {
               <div className="border-b border-white/5 pb-4">
                 <div className="flex items-end justify-between w-full gap-4">
                   <Link
-                    href="#events"
+                    href="/#events"
                     onClick={(e) => {
-                      e.preventDefault();
                       closeMobileMenu();
-                      window.lenis?.scrollTo("#events");
+                      if (window.location.pathname === "/") {
+                        e.preventDefault();
+                        window.lenis?.scrollTo("#events");
+                      }
                     }}
                     className="group flex items-end gap-4 flex-1"
                   >
