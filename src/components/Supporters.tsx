@@ -5,16 +5,29 @@ import { GSAPReveal } from "./GSAPReveal";
 
 export default function Supporters() {
   const logos = [
-    "/assets/supporters/supporter-1.png",
-    "/assets/supporters/supporter-2.png",
-    "/assets/supporters/supporter-3.png",
-    "/assets/supporters/supporter-4.png",
+    // "/assets/supporters/supporter-1.png",
+    // "/assets/supporters/supporter-2.png",
+    // "/assets/supporters/supporter-3.png",
+    // "/assets/supporters/supporter-4.png",
     "/assets/supporters/supporter-5.png",
     "/assets/supporters/supporter-6.png",
     "/assets/supporters/supporter-7.png",
     "/assets/supporters/supporter-8.png",
-    "/assets/supporters/supporter-9.png",
-    "/assets/supporters/supporter-10.png",
+    // "/assets/supporters/supporter-9.png",
+    // "/assets/supporters/supporter-10.png",
+    // "/assets/supporters/supporter-11.png",
+    "/assets/supporters/supporter-12.png",
+    "/assets/supporters/supporter-13.png",
+    // "/assets/supporters/supporter-14.png",
+    "/assets/supporters/supporter-15.png",
+    "/assets/supporters/supporter-16.png",
+    "/assets/supporters/supporter-17.png",
+    "/assets/supporters/supporter-18.png",
+    // "/assets/supporters/supporter-19.png",
+    // "/assets/supporters/supporter-20.png",
+    "/assets/supporters/supporter-21.png",
+    "/assets/supporters/supporter-22.png",
+    "/assets/supporters/supporter-23.png",
   ];
 
   // Duplicate for seamless loop (enough to cover wide screens)
