@@ -14,8 +14,6 @@ export default function Supporters() {
 
     "/assets/supporters/supporter-25.png",
     "/assets/supporters/supporter-26.png",
-    "/assets/supporters/supporter-27.png",
-    "/assets/supporters/supporter-28.png",
     "/assets/supporters/supporter-29.png",
     "/assets/supporters/supporter-30.png",
     "/assets/supporters/supporter-31.png",
@@ -44,7 +42,7 @@ export default function Supporters() {
         <div className="absolute top-0 left-0 h-full w-20 md:w-40 bg-linear-to-r from-black to-transparent z-10"></div>
         <div className="absolute top-0 right-0 h-full w-20 md:w-40 bg-linear-to-l from-black to-transparent z-10"></div>
 
-        <div className="flex animate-marquee hover:[animation-play-state:paused] w-max">
+        <div className="flex animate-[marquee_100s_linear_infinite] hover:[animation-play-state:paused] w-max">
           {marqueeLogos.map((src, index) => (
             <div
               key={index}
