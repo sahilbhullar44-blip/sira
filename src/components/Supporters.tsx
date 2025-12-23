@@ -5,12 +5,11 @@ import { GSAPReveal } from "./GSAPReveal";
 
 export default function Supporters() {
   const logos = [
-
     "/assets/supporters/supporter-5.png",
     "/assets/supporters/supporter-6.png",
     "/assets/supporters/supporter-7.png",
     "/assets/supporters/supporter-8.png",
-  
+
     "/assets/supporters/supporter-15.png",
 
     "/assets/supporters/supporter-25.png",
@@ -21,6 +20,7 @@ export default function Supporters() {
     "/assets/supporters/supporter-30.png",
     "/assets/supporters/supporter-31.png",
     "/assets/supporters/supporter-32.png",
+    "/assets/supporters/supporter-achal-khanna.png",
   ];
 
   // Duplicate for seamless loop (enough to cover wide screens)
