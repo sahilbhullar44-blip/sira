@@ -8,6 +8,7 @@ import gsap from "gsap";
 import { useQuery } from "@tanstack/react-query";
 import { getEvents } from "@/lib/admin-api";
 import type { IEvent } from "@/models/Event";
+import { format } from "date-fns";
 
 interface CustomWindow extends Window {
   openModal?: (
@@ -61,20 +62,10 @@ export default function UpcomingEvents() {
           title: e.title,
           artist: e.subtitle || "",
           details: {
-            Date: new Date(e.date).toLocaleDateString("en-US", {
-              weekday: "long",
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-              timeZone: "America/Edmonton",
-            }),
+            Date: format(new Date(e.date), "EEE, MMM d, yyyy"),
             Time: `${
               e.doorsOpenTime ? `Doors Open ${e.doorsOpenTime} | ` : ""
-            }Show Start ${new Date(e.date).toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "2-digit",
-              timeZone: "America/Edmonton",
-            })}`,
+            }Show Start ${format(new Date(e.date), "h:mm a")}`,
             Venue: e.venue || "",
             Address: e.fullAddress || e.location || "",
             Contact: e.contactInfo || "info@siraconcerts.com",

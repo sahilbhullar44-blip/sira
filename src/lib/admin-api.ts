@@ -3,7 +3,7 @@ import { IEvent } from '@/models/Event';
 import { IInquiry } from '@/models/Inquiry';
 
 const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_APP_URL || '',
+    baseURL: process.env.NEXT_PUBLIC_URL || 'http://localhost:3001',
     headers: {
         'Content-Type': 'application/json',
     },
