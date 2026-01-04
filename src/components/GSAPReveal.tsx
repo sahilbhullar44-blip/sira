@@ -28,30 +28,27 @@ export function GSAPReveal({
   useEffect(() => {
     if (!el.current) return;
 
-    // Use a small timeout to ensure DOM is ready?
-    // Actually GSAP handles it well usually.
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        el.current,
+        { y: y, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: duration,
+          delay: delay,
+          stagger: stagger,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: el.current,
+            start: "top 85%",
+            toggleActions: "play none none none", // Play once and stay
+          },
+        }
+      );
+    }, el);
 
-    // Initial state set by GSAP to avoid FOUC
-    gsap.set(el.current, { y: y, opacity: 0 });
-
-    gsap.to(el.current, {
-      y: 0,
-      opacity: 1,
-      duration: duration,
-      delay: delay,
-      stagger: stagger,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: el.current,
-        start: "top 85%", // Trigger when top of element hits 85% of viewport height
-        toggleActions: "play none none reverse", // Play on enter, reverse on leave back up
-      },
-    });
-
-    return () => {
-      // Cleanup happens automatically mostly with ScrollTrigger but good practice
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    return () => ctx.revert(); // Proper cleanup
   }, [delay, y, duration, stagger]);
 
   return (
