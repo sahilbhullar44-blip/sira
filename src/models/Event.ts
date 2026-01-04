@@ -11,6 +11,7 @@ export interface IEvent extends Document {
     timeString?: string;
     location: string; // Keep for backward compatibility or simple display
     venue?: string;
+    fullAddress?: string;
 
     coordinates?: {
         lat: number;
@@ -38,6 +39,7 @@ const EventSchema = new Schema<IEvent>(
         timeString: { type: String },
         location: { type: String, required: true },
         venue: { type: String },
+        fullAddress: { type: String },
 
         coordinates: {
             lat: { type: Number },

@@ -35,6 +35,7 @@ type EventFormValues = {
   doorsOpenTime: string;
   location: string;
   venue: string;
+  fullAddress: string;
   coordinates: {
     lat: number;
     lng: number;
@@ -134,9 +135,10 @@ export default function EventForm({
       doorsOpenTime: initialData?.doorsOpenTime ?? "",
       location: initialData?.location ?? "", // General location (e.g. City)
       venue: initialData?.venue ?? "",
+      fullAddress: initialData?.fullAddress ?? "",
       coordinates: initialData?.coordinates ?? { lat: 0, lng: 0 },
       imageUrl: initialData?.imageUrl ?? "",
-      contactInfo: initialData?.contactInfo ?? "",
+      contactInfo: initialData?.contactInfo ?? "info@siraconcerts.com",
       ticketUrl: initialData?.ticketUrl ?? "",
       themeColor: initialData?.themeColor ?? "red",
     },
@@ -158,6 +160,7 @@ export default function EventForm({
 
     // Auto-fill fields
     form.setFieldValue("venue", result.name || "");
+    form.setFieldValue("fullAddress", result.display_name || "");
     // address field removed from form, so we don't set it in visible form
 
     form.setFieldValue("location", locationStr);
@@ -411,6 +414,22 @@ export default function EventForm({
                     )}
                   </form.Field>
                 </div>
+
+                <form.Field name="fullAddress">
+                  {(field) => (
+                    <div className="space-y-2">
+                      <label className="block text-xs uppercase tracking-wider font-semibold text-gray-500">
+                        Full Address
+                      </label>
+                      <input
+                        value={field.state.value}
+                        onChange={(e) => field.handleChange(e.target.value)}
+                        className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500/20 focus:outline-none"
+                        placeholder="Full address will appear here..."
+                      />
+                    </div>
+                  )}
+                </form.Field>
 
                 <div className="grid grid-cols-2 gap-6">
                   <form.Field name="coordinates">
