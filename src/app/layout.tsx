@@ -15,12 +15,6 @@ export const metadata: Metadata = {
     "SiRa Entertainment curates world-class experiences. We bridge the gap between iconic artists and the audiences who adore them.",
 };
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import SmoothScroller from "@/components/SmoothScroller";
-import Modal from "@/components/Modal";
-import Toast from "@/components/Toast";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,13 +25,7 @@ export default function RootLayout({
       <body
         className={`${syne.variable} antialiased selection:bg-red-700 selection:text-white`}
       >
-        <SmoothScroller />
-        <div className="noise-overlay" />
-        <Navbar />
         {children}
-        <Footer />
-        <Modal />
-        <Toast />
       </body>
     </html>
   );
