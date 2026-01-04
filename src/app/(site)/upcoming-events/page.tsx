@@ -4,8 +4,78 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { GSAPReveal } from "@/components/GSAPReveal";
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "@/lib/admin-api";
+import type { IEvent } from "@/models/Event";
+
+interface CustomWindow extends Window {
+  openModal?: (
+    action: string,
+    data?: { ticketUrl?: string; eventTitle?: string }
+  ) => void;
+}
+
+declare const window: CustomWindow;
+
+interface Event {
+  id: string;
+  poster: string;
+  subtitle: string;
+  title: string;
+  artist: string;
+  details: {
+    Date: string;
+    Time: string;
+    Venue: string;
+    Address: string;
+    Contact: string;
+  };
+  buttonText: string;
+  buttonAction: "Tickets" | "Contact";
+  themeColor: string;
+  ticketUrl?: string;
+}
 
 export default function UpcomingEvents() {
+  const { data: events = [], isLoading } = useQuery<Event[]>({
+    queryKey: ["upcoming-events-page"],
+    queryFn: async () => {
+      const data = await getEvents();
+      return data
+        .filter((e: IEvent) => new Date(e.date) >= new Date())
+        .map((e: IEvent) => ({
+          id: String(e._id),
+          poster: e.imageUrl || "/assets/events/default-poster.jpg",
+          subtitle: e.tagline || "",
+          title: e.title,
+          artist: e.subtitle || "",
+          details: {
+            Date: new Date(e.date).toLocaleDateString("en-US", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }),
+            Time: `${
+              e.doorsOpenTime ? `Doors Open ${e.doorsOpenTime} | ` : ""
+            }Show Start ${new Date(e.date).toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+            })}`,
+            Venue: e.venue || "",
+            Address: e.fullAddress || e.location || "",
+            Contact: e.contactInfo || "info@siraconcerts.com",
+          },
+          buttonText: e.ticketUrl ? "Buy Tickets" : "Contact Us",
+          buttonAction: (e.ticketUrl ? "Tickets" : "Contact") as
+            | "Tickets"
+            | "Contact",
+          themeColor: e.themeColor || "red",
+          ticketUrl: e.ticketUrl,
+        }));
+    },
+  });
+
   return (
     <div className="min-h-screen bg-[#050505] pt-32 md:pt-40 pb-12 px-6 relative overflow-hidden">
       {/* Background Effects */}
@@ -37,195 +107,99 @@ export default function UpcomingEvents() {
           </div>
         </GSAPReveal>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left: Event Poster */}
-          <GSAPReveal>
-            <div className="relative aspect-4/5 w-full max-w-md mx-auto lg:max-w-none border border-white/10 rounded-sm overflow-hidden group">
-              <div className="absolute inset-0 bg-red-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"></div>
-              <Image
-                src="/assets/events/vishal-sheykhar-new-poster.jpg"
-                alt="The Superhit Tour: Vishal and Sheykhar Live in Edmonton"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-            </div>
-          </GSAPReveal>
-
-          {/* Right: Event Details */}
-          <GSAPReveal delay={0.2}>
-            <div className="flex flex-col justify-center text-center lg:text-left h-full">
-              <span className="text-red-600 font-bold tracking-widest uppercase text-sm mb-4">
-                Edmonton • Live Concert
-              </span>
-              <h2 className="font-serif font-bold text-4xl md:text-6xl text-white mb-2 leading-tight">
-                The Superhit Tour
-              </h2>
-              <h3 className="font-serif text-2xl md:text-4xl text-gray-300 mb-8">
-                Vishal & Sheykhar
-              </h3>
-
-              <div className="space-y-6 mb-10 text-gray-400 text-lg bg-white/5 p-8 rounded-lg border border-white/10">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Date
-                  </span>
-                  <span className="text-white font-medium">
-                    Tuesday, June 30th, 2026
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Time
-                  </span>
-                  <span className="text-white font-medium">
-                    Doors Open 6:00 PM | Show Start 8:00 PM
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Venue
-                  </span>
-                  <span className="text-white font-medium">
-                    Edmonton Expo Centre
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Address
-                  </span>
-                  <span className="text-white font-medium">
-                    7515 118 Ave NW, Edmonton, AB T5B 0J2
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Contact
-                  </span>
-                  <span className="text-white font-medium">
-                    info@siraconcerts.com
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
-                  onClick={() => window.openModal?.("Tickets")}
-                  className="px-8 py-4 bg-red-700 text-white uppercase tracking-widest text-sm font-bold hover:bg-red-800 transition-all duration-300 shadow-[0_0_20px_rgba(185,28,28,0.3)] hover:shadow-[0_0_30px_rgba(185,28,28,0.5)]"
-                >
-                  Buy Tickets
-                </button>
-              </div>
-            </div>
-          </GSAPReveal>
-        </div>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-white/10 my-16 md:my-24"></div>
-
-        {/* Event 2: NYE 2026 */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Right: Event Details (Text First on Desktop for variation, or keep consistent? Let's keep consistent layout for now, or alternate. Alternating looks better usually, but let's stick to the grid flow. Actually, alternating is nice. Let's try consistent first as per request "add this poster", but usually standard list. Let's strictly follow the existing pattern first to be safe, or just append it. Adding it as a second item in the grid wrapper? 
-          Wait, the existing code has a single grid wrapper for one event.
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-             ... Left Poster ...
-             ... Right Details ...
+        {isLoading ? (
+          <div className="text-white text-center py-20">Loading events...</div>
+        ) : events.length === 0 ? (
+          <div className="text-white text-center py-20">
+            No upcoming events at the moment.
           </div>
-          
-          I should probably start a NEW grid wrapper for the second event to keep them distinct blocks, or put them in the same container.
-          Given the current structure, it's safer to have separate blocks separated by a divider.
-          */}
+        ) : (
+          events.map((event, index) => (
+            <div key={event.id}>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                <GSAPReveal>
+                  <div className="relative aspect-4/5 w-full max-w-md mx-auto lg:max-w-none border border-white/10 rounded-sm overflow-hidden group">
+                    <div
+                      className={`absolute inset-0 bg-${event.themeColor}-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10`}
+                    ></div>
+                    <Image
+                      src={event.poster}
+                      alt={`${event.title}: ${event.artist}`}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
+                  </div>
+                </GSAPReveal>
 
-          {/* Left: Event Poster */}
-          <GSAPReveal>
-            <div className="relative aspect-4/5 w-full max-w-md mx-auto lg:max-w-none border border-white/10 rounded-sm overflow-hidden group">
-              <div className="absolute inset-0 bg-purple-600/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"></div>
-              <Image
-                src="/assets/events/nye-2026-poster.jpg"
-                alt="NYE 2026 hosted by JJ Ventures"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60"></div>
-            </div>
-          </GSAPReveal>
+                <GSAPReveal delay={0.2}>
+                  <div className="flex flex-col justify-center text-center lg:text-left h-full">
+                    <span
+                      className={`text-${event.themeColor}-600 font-bold tracking-widest uppercase text-sm mb-4`}
+                    >
+                      {event.subtitle}
+                    </span>
+                    <h2 className="font-serif font-bold text-4xl md:text-6xl text-white mb-2 leading-tight">
+                      {event.title}
+                    </h2>
+                    <h3 className="font-serif text-2xl md:text-4xl text-gray-300 mb-8">
+                      {event.artist}
+                    </h3>
 
-          {/* Right: Event Details */}
-          <GSAPReveal delay={0.2}>
-            <div className="flex flex-col justify-center text-center lg:text-left h-full">
-              <span className="text-purple-500 font-bold tracking-widest uppercase text-sm mb-4">
-                Edmonton • New Year&apos;s Eve
-              </span>
-              <h2 className="font-serif font-bold text-4xl md:text-6xl text-white mb-2 leading-tight">
-                NYE 2026
-              </h2>
-              <h3 className="font-serif text-2xl md:text-4xl text-gray-300 mb-8">
-                Hosted by JJ Ventures
-              </h3>
+                    <div className="space-y-6 mb-10 text-gray-400 text-lg bg-white/5 p-8 rounded-lg border border-white/10">
+                      {Object.entries(event.details).map(
+                        ([key, value]) =>
+                          (value as string).trim() !== "" && (
+                            <div
+                              key={key}
+                              className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0"
+                            >
+                              <span className="uppercase tracking-widest text-xs text-white/50 w-24">
+                                {key}
+                              </span>
+                              <span className="text-white font-medium">
+                                {value}
+                              </span>
+                            </div>
+                          )
+                      )}
+                    </div>
 
-              <div className="space-y-6 mb-10 text-gray-400 text-lg bg-white/5 p-8 rounded-lg border border-white/10">
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Date
-                  </span>
-                  <span className="text-white font-medium">
-                    December 31st, 2026
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Time
-                  </span>
-                  <span className="text-white font-medium">
-                    Doors Open 7:00 PM
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Venue
-                  </span>
-                  <span className="text-white font-medium">Star Banquets</span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Address
-                  </span>
-                  <span className="text-white font-medium">
-                    6930 34 St, Edmonton
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Tickets
-                  </span>
-                  <span className="text-white font-medium">
-                    $60.00 (Table of 10: $550.00)
-                  </span>
-                </div>
-                <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0">
-                  <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                    Contact
-                  </span>
-                  <span className="text-white font-medium text-sm">
-                    Jyoti Joshi (780-884-7573) <br className="lg:hidden" /> Rama
-                    Airi (780-953-7384)
-                  </span>
-                </div>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                      <button
+                        onClick={() => {
+                          if (event.buttonAction === "Tickets") {
+                            window.openModal?.("Tickets", {
+                              ticketUrl: event.ticketUrl,
+                              eventTitle: event.title,
+                            });
+                          } else {
+                            window.openModal?.(event.buttonAction);
+                          }
+                        }}
+                        className={`px-8 py-4 bg-${event.themeColor}-700 text-white uppercase tracking-widest text-sm font-bold hover:bg-${event.themeColor}-800 transition-all duration-300 shadow-[0_0_20px_rgba(185,28,28,0.3)] hover:shadow-[0_0_30px_rgba(185,28,28,0.5)]`}
+                        style={{
+                          boxShadow: `0 0 20px rgba(${
+                            event.themeColor === "purple"
+                              ? "126,34,206"
+                              : "185,28,28"
+                          }, 0.3)`,
+                        }}
+                      >
+                        {event.buttonText}
+                      </button>
+                    </div>
+                  </div>
+                </GSAPReveal>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button
-                  onClick={() => window.openModal?.("Tickets")}
-                  className="px-8 py-4 bg-purple-700 text-white uppercase tracking-widest text-sm font-bold hover:bg-purple-800 transition-all duration-300 shadow-[0_0_20px_rgba(126,34,206,0.3)] hover:shadow-[0_0_30px_rgba(126,34,206,0.5)]"
-                >
-                  Buy Tickets
-                </button>
-              </div>
+              {/* Divider between events, but not after the last one */}
+              {index < events.length - 1 && (
+                <div className="w-full h-px bg-white/10 my-16 md:my-24"></div>
+              )}
             </div>
-          </GSAPReveal>
-        </div>
+          ))
+        )}
       </div>
     </div>
   );

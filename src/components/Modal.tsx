@@ -7,8 +7,9 @@ export default function Modal() {
   const [isOpen, setIsOpen] = useState(false);
   const [context, setContext] = useState<"Contact" | "Tickets">("Contact");
   const [email, setEmail] = useState("");
-
-  // const [phone, setPhone] = useState(""); // Unused
+  // Ticket flow state
+  const [ticketUrl, setTicketUrl] = useState("");
+  const [eventTitle, setEventTitle] = useState("");
 
   // New Inquiry State
   const [firstName, setFirstName] = useState("");
@@ -22,6 +23,10 @@ export default function Modal() {
   useEffect(() => {
     const handleOpen = (e: CustomEvent) => {
       setContext(e.detail.context);
+      if (e.detail.context === "Tickets") {
+        setTicketUrl(e.detail.ticketUrl || "");
+        setEventTitle(e.detail.eventTitle || "");
+      }
       setIsOpen(true);
     };
 
@@ -36,6 +41,11 @@ export default function Modal() {
   // Handle close
   const closeModal = () => {
     setIsOpen(false);
+    // Reset ticket state on close
+    setTimeout(() => {
+      setTicketUrl("");
+      setEventTitle("");
+    }, 300);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,7 +55,8 @@ export default function Modal() {
     setLoading(true);
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_URL || "";
+      // Use local API
+      const baseUrl = ""; // Relative path works fine
       let res;
 
       if (context === "Contact") {
@@ -66,10 +77,17 @@ export default function Modal() {
           setLoading(false);
           return;
         }
+
+        // Use the existing contact endpoint
         res = await fetch(`${baseUrl}/api/contact`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ emailOrPhone: email }),
+          body: JSON.stringify({
+            emailOrPhone: email,
+            // We can try sending eventTitle if the backend learns to accept it later,
+            // but for now api/contact only takes emailOrPhone.
+            // keeping it simple to match existing api.
+          }),
         });
       }
 
@@ -81,10 +99,16 @@ export default function Modal() {
       }
 
       if (context === "Tickets") {
-        window.open(
-          "https://www.ticketmaster.ca/event/1100638F104A9995",
-          "_blank"
-        );
+        // Use dynamic URL if present, otherwise fallback (or just close if empty)
+        if (ticketUrl) {
+          window.open(ticketUrl, "_blank");
+        } else {
+          // Fallback if no specific URL was passed (legacy support)
+          window.open(
+            "https://www.ticketmaster.ca/event/1100638F104A9995",
+            "_blank"
+          );
+        }
       } else {
         // Trigger Toast
         window.dispatchEvent(new CustomEvent("show-toast"));
@@ -138,12 +162,11 @@ export default function Modal() {
           <h2 className="font-serif font-bold text-2xl md:text-3xl text-white mb-2">
             {context === "Tickets" ? "Buy Tickets" : "Contact Us"}
           </h2>
-          {/* Tag Line */}
-          {/* <p className="text-white/70 text-sm md:text-base mb-4 font-light tracking-wide">
-            {context === "Tickets"
-              ? "Proceed to Ticketmaster to move ahead."
-              : "Get in touch with us for any enquiries."}
-          </p> */}
+          {context === "Tickets" && eventTitle && (
+            <p className="text-white/70 text-sm mb-4">
+              For <span className="text-red-500 font-bold">{eventTitle}</span>
+            </p>
+          )}
           <div className="w-16 h-px bg-red-700 mx-auto"></div>
         </div>
 
@@ -226,9 +249,12 @@ export default function Modal() {
 
 // Helper to open modal from anywhere (to mimic the original script)
 if (typeof window !== "undefined") {
-  window.openModal = (context: "Contact" | "Tickets") => {
+  window.openModal = (
+    context: "Contact" | "Tickets",
+    data?: { ticketUrl?: string; eventTitle?: string }
+  ) => {
     window.dispatchEvent(
-      new CustomEvent("open-sira-modal", { detail: { context } })
+      new CustomEvent("open-sira-modal", { detail: { context, ...data } })
     );
   };
 }

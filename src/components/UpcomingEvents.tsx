@@ -1,13 +1,25 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { GSAPReveal } from "./GSAPReveal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import gsap from "gsap";
+import { useQuery } from "@tanstack/react-query";
+import { getEvents } from "@/lib/admin-api";
+import type { IEvent } from "@/models/Event";
+
+interface CustomWindow extends Window {
+  openModal?: (
+    action: string,
+    data?: { ticketUrl?: string; eventTitle?: string }
+  ) => void;
+}
+
+declare const window: CustomWindow;
 
 interface Event {
-  id: number;
+  id: string;
   poster: string;
   subtitle: string;
   title: string;
@@ -22,62 +34,68 @@ interface Event {
   buttonText: string;
   buttonAction: "Tickets" | "Contact";
   themeColor: string;
+  ticketUrl?: string;
 }
-
-const events: Event[] = [
-  {
-    id: 1,
-    poster: "/assets/events/vishal-sheykhar-new-poster.jpg",
-    subtitle: "Edmonton • Live Concert",
-    title: "The Superhit Tour",
-    artist: "Vishal & Sheykhar",
-    details: {
-      Date: "Tuesday, June 30th, 2026",
-      Time: "Doors Open 6:00 PM | Show Start 8:00 PM",
-      Venue: "Edmonton Expo Centre",
-      Address: "7515 118 Ave NW, Edmonton, AB T5B 0J2",
-      Contact: "info@siraconcerts.com",
-    },
-    buttonText: "Buy Tickets",
-    buttonAction: "Tickets",
-    themeColor: "red",
-  },
-  {
-    id: 2,
-    poster: "/assets/events/nye-2026-poster.jpg",
-    subtitle: "Edmonton • New Year's Eve",
-    title: "NYE 2026",
-    artist: "Hosted by JJ Ventures",
-    details: {
-      Date: "December 31st, 2026",
-      Time: "Doors Open 7:00 PM",
-      Venue: "Star Banquets",
-      Address: "6930 34 St, Edmonton",
-      Contact: "Jyoti Joshi (780-884-7573) | Rama Airi (780-953-7384)",
-    },
-    buttonText: "Buy Tickets",
-    buttonAction: "Tickets",
-    themeColor: "purple",
-  },
-];
 
 export default function UpcomingEvents() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
   const minSwipeDistance = 50;
 
   const slideRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % events.length);
-  };
+  const { data: events = [], isLoading: loading } = useQuery<Event[]>({
+    queryKey: ["upcoming-events"],
+    queryFn: async () => {
+      const data = await getEvents();
+      return data
+        .filter((e: IEvent) => new Date(e.date) >= new Date())
+        .map((e: IEvent) => ({
+          id: String(e._id),
+          poster: e.imageUrl || "/assets/events/default-poster.jpg",
+          subtitle: e.tagline || "",
+          title: e.title,
+          artist: e.subtitle || "",
+          details: {
+            Date: new Date(e.date).toLocaleDateString("en-US", {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }),
+            Time: `${
+              e.doorsOpenTime ? `Doors Open ${e.doorsOpenTime} | ` : ""
+            }Show Start ${new Date(e.date).toLocaleTimeString("en-US", {
+              hour: "numeric",
+              minute: "2-digit",
+            })}`,
+            Venue: e.venue || "",
+            Address: e.fullAddress || e.location || "",
+            Contact: e.contactInfo || "info@siraconcerts.com",
+          },
+          buttonText: e.ticketUrl ? "Buy Tickets" : "Contact Us",
+          buttonAction: (e.ticketUrl ? "Tickets" : "Contact") as
+            | "Tickets"
+            | "Contact",
+          themeColor: e.themeColor || "red",
+          ticketUrl: e.ticketUrl,
+        }));
+    },
+  });
 
-  const prevSlide = () => {
+  const nextSlide = useCallback(() => {
+    if (events.length === 0) return;
+    setCurrentSlide((prev) => (prev + 1) % events.length);
+  }, [events.length]);
+
+  const prevSlide = useCallback(() => {
+    if (events.length === 0) return;
     setCurrentSlide((prev) => (prev - 1 + events.length) % events.length);
-  };
+  }, [events.length]);
 
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
@@ -102,13 +120,14 @@ export default function UpcomingEvents() {
   };
 
   useEffect(() => {
-    if (!isPaused) {
+    // Only auto-play if not paused by hover
+    if (!isPaused && events.length > 1) {
       const timer = setInterval(() => {
-        nextSlide();
+        setCurrentSlide((prev) => (prev + 1) % events.length);
       }, 5000);
       return () => clearInterval(timer);
     }
-  }, [isPaused, currentSlide]);
+  }, [isPaused, events.length]);
 
   useEffect(() => {
     if (slideRef.current && contentRef.current) {
@@ -124,6 +143,9 @@ export default function UpcomingEvents() {
       );
     }
   }, [currentSlide]);
+
+  if (loading) return null; // Or a loader
+  if (events.length === 0) return null; // Don't show section if no upcoming events
 
   const event = events[currentSlide];
 
@@ -143,22 +165,24 @@ export default function UpcomingEvents() {
             <h2 className="font-serif font-bold text-4xl md:text-5xl text-white">
               Upcoming Events
             </h2>
-            <div className="flex gap-4">
-              <button
-                onClick={prevSlide}
-                className="p-3 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-white"
-                aria-label="Previous event"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="p-3 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-white"
-                aria-label="Next event"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
+            {events.length > 1 && (
+              <div className="flex gap-4">
+                <button
+                  onClick={prevSlide}
+                  className="p-3 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-white"
+                  aria-label="Previous event"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="p-3 rounded-full border border-white/20 hover:bg-white/10 transition-colors text-white"
+                  aria-label="Next event"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </div>
+            )}
           </div>
         </GSAPReveal>
 
@@ -197,22 +221,34 @@ export default function UpcomingEvents() {
               </h4>
 
               <div className="space-y-6 mb-10 text-gray-400 text-lg">
-                {Object.entries(event.details).map(([key, value]) => (
-                  <div
-                    key={key}
-                    className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0"
-                  >
-                    <span className="uppercase tracking-widest text-xs text-white/50 w-24">
-                      {key}
-                    </span>
-                    <span className="text-white font-medium">{value}</span>
-                  </div>
-                ))}
+                {Object.entries(event.details).map(
+                  ([key, value]) =>
+                    (value as string).trim() !== "" && (
+                      <div
+                        key={key}
+                        className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-4 border-b border-white/5 pb-4 last:border-0 last:pb-0"
+                      >
+                        <span className="uppercase tracking-widest text-xs text-white/50 w-24">
+                          {key}
+                        </span>
+                        <span className="text-white font-medium">{value}</span>
+                      </div>
+                    )
+                )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
-                  onClick={() => window.openModal?.(event.buttonAction)}
+                  onClick={() => {
+                    if (event.buttonAction === "Tickets") {
+                      window.openModal?.("Tickets", {
+                        ticketUrl: event.ticketUrl,
+                        eventTitle: event.title,
+                      });
+                    } else {
+                      window.openModal?.(event.buttonAction);
+                    }
+                  }}
                   className={`px-8 py-4 bg-${event.themeColor}-700 text-white uppercase tracking-widest text-sm font-bold hover:bg-${event.themeColor}-800 transition-all duration-300 shadow-[0_0_20px_rgba(185,28,28,0.3)] hover:shadow-[0_0_30px_rgba(185,28,28,0.5)]`}
                   style={{
                     boxShadow: `0 0 20px rgba(${
