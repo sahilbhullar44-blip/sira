@@ -9,6 +9,12 @@ import { ArrowLeft, Loader2, Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 type NominatimResult = {
   place_id: number;
@@ -100,11 +106,17 @@ export default function EventForm({
 
   const mutation = useMutation({
     mutationFn: async (values: EventFormValues) => {
-      // Need to cast values to any to satisfy createEvent partial that still has other fields
-      // or we just send what we have.
+      // Create a date object from the local time input
+      // Then treat it as if it's in the browser's local timezone (standard behavior),
+      // but explicitly convert it to a UTC ISO string for storage.
+      // NOTE: Values.date comes from datetime-local input like "2023-12-25T19:00"
+
+      const parsedDate = dayjs(values.date); // parses as local time
+      const utcDate = parsedDate.utc().toDate();
+
       const payload: Partial<IEvent> = {
         ...values,
-        date: new Date(values.date),
+        date: utcDate,
         imageUrl: values.imageUrl || undefined,
         coordinates: {
           lat: Number(values.coordinates.lat),
@@ -129,8 +141,9 @@ export default function EventForm({
       title: initialData?.title ?? "",
       subtitle: initialData?.subtitle ?? "",
       tagline: initialData?.tagline ?? "",
+      // Format the UTC date from DB to local "YYYY-MM-DDTHH:mm" for the input
       date: initialData?.date
-        ? new Date(initialData.date).toISOString().slice(0, 16)
+        ? dayjs(initialData.date).format("YYYY-MM-DDTHH:mm")
         : "",
       doorsOpenTime: initialData?.doorsOpenTime ?? "",
       location: initialData?.location ?? "", // General location (e.g. City)

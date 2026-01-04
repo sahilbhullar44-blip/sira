@@ -26,8 +26,6 @@ export default function AdminDashboard() {
 
   const totalEvents = events?.length || 0;
   const totalInquiries = inquiries?.length || 0;
-  const totalTicketsSold =
-    events?.reduce((acc, event) => acc + (event.ticketsSold || 0), 0) || 0;
   const totalUsers = 0; // Placeholder
 
   const stats = [
@@ -41,7 +39,7 @@ export default function AdminDashboard() {
     },
     {
       label: "Tickets Sold",
-      value: totalTicketsSold,
+      // value: totalTicketsSold,
       icon: Ticket,
       color: "text-yellow-600",
       bg: "bg-yellow-50",

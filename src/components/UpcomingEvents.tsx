@@ -66,12 +66,14 @@ export default function UpcomingEvents() {
               month: "long",
               day: "numeric",
               year: "numeric",
+              timeZone: "America/Edmonton",
             }),
             Time: `${
               e.doorsOpenTime ? `Doors Open ${e.doorsOpenTime} | ` : ""
             }Show Start ${new Date(e.date).toLocaleTimeString("en-US", {
               hour: "numeric",
               minute: "2-digit",
+              timeZone: "America/Edmonton",
             })}`,
             Venue: e.venue || "",
             Address: e.fullAddress || e.location || "",
