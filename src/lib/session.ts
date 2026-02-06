@@ -5,6 +5,21 @@ import { NextRequest, NextResponse } from 'next/server';
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
+export async function createSession(payload: JWTPayload) {
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    const session = await encrypt({ ...payload, expires });
+
+    const cookieStore = await cookies();
+    cookieStore.set('session', session, {
+        expires,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        path: '/',
+        ...(process.env.NODE_ENV === 'production' && { domain: '.siraconcerts.com' }),
+    });
+}
+
 export async function encrypt(payload: JWTPayload) {
     return await new SignJWT(payload)
         .setProtectedHeader({ alg: 'HS256' })
