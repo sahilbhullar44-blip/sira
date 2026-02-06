@@ -18,6 +18,7 @@ export default function AdminLogin() {
 
     try {
       await axios.post("/api/admin/login", { email, password });
+      router.refresh(); // Update server components/middleware state
       router.push("/admin");
     } catch (err: unknown) {
       if (axios.isAxiosError<{ message: string }>(err)) {
