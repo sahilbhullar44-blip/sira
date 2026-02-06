@@ -6,7 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+import { useAnalytics } from "@/hooks/useAnalytics";
+
 export default function Hero() {
+  const { trackEvent } = useAnalytics();
   const containerRef = useRef<HTMLElement>(null); // Top Text
   const [timeLeft, setTimeLeft] = useState({ d: 0, h: 0, m: 0, s: 0 });
 
@@ -53,7 +56,7 @@ export default function Hero() {
             duration: 0.8,
             ease: "power2.out",
           },
-          "-=0.8"
+          "-=0.8",
         )
         .to(
           ".hero-fade-in",
@@ -64,7 +67,7 @@ export default function Hero() {
             stagger: 0.1,
             ease: "power2.out",
           },
-          "-=0.5"
+          "-=0.5",
         );
 
       // 3D Tilt Effect
@@ -166,7 +169,10 @@ export default function Hero() {
           {/* Bottom Action */}
           <div className="mt-6 sm:mt-10 opacity-0 hero-fade-in translate-y-4 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 w-full sm:w-auto px-4 sm:px-0">
             <button
-              onClick={() => window.openModal?.("Tickets")}
+              onClick={() => {
+                trackEvent("click", "hero_buy_tickets");
+                window.openModal?.("Tickets");
+              }}
               className="group relative px-6 py-3 sm:px-8 sm:py-4 bg-white text-black font-bold text-[10px] sm:text-xs md:text-sm tracking-widest uppercase overflow-hidden hover:scale-105 transition-transform duration-300 min-w-full sm:min-w-[160px]"
             >
               <div className="absolute inset-0 bg-red-600 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
@@ -178,6 +184,7 @@ export default function Hero() {
             <button
               onClick={(e) => {
                 e.preventDefault();
+                trackEvent("click", "hero_discover");
                 window.lenis?.scrollTo("#about");
               }}
               className="group relative px-6 py-3 sm:px-8 sm:py-4 bg-transparent border border-white/30 text-white font-bold text-[10px] sm:text-xs md:text-sm tracking-widest uppercase overflow-hidden hover:scale-105 transition-transform duration-300 min-w-full sm:min-w-[160px]"

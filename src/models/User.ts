@@ -1,7 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
 
+// 1. Add fields to Interface
 export interface IUser extends Document {
     emailOrPhone: string;
+    password?: string; // Optional because existing users might not have it yet (or for OAuth later)
+    role: 'user' | 'admin';
+    name?: string;
     createdAt: Date;
 }
 
@@ -12,6 +16,19 @@ const UserSchema: Schema = new Schema<IUser>(
             required: true,
             trim: true,
             index: { unique: true },
+        },
+        password: {
+            type: String,
+            select: false, // Don't return password by default
+        },
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user',
+        },
+        name: {
+            type: String,
+            trim: true,
         },
         createdAt: {
             type: Date,

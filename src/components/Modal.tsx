@@ -2,6 +2,7 @@
 
 import { X, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 export default function Modal() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +20,8 @@ export default function Modal() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { trackEvent } = useAnalytics();
+
   // Expose toggle function to window for the "vanilla-like" interactions
   useEffect(() => {
     const handleOpen = (e: CustomEvent) => {
@@ -34,7 +37,7 @@ export default function Modal() {
     return () =>
       window.removeEventListener(
         "open-sira-modal",
-        handleOpen as EventListener
+        handleOpen as EventListener,
       );
   }, []);
 
@@ -94,9 +97,19 @@ export default function Modal() {
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(
-          errorData.details || errorData.error || "Failed to submit"
+          errorData.details || errorData.error || "Failed to submit",
         );
       }
+
+      // Track Success
+      trackEvent(
+        "form_submit",
+        context === "Contact" ? "contact_form" : "ticket_waitlist",
+        {
+          email: email,
+          event: eventTitle || "General Waitlist",
+        },
+      );
 
       if (context === "Tickets") {
         // Use dynamic URL if present, otherwise fallback (or just close if empty)
@@ -106,7 +119,7 @@ export default function Modal() {
           // Fallback if no specific URL was passed (legacy support)
           window.open(
             "https://www.ticketmaster.ca/event/1100638F104A9995",
-            "_blank"
+            "_blank",
           );
         }
       } else {
@@ -125,7 +138,7 @@ export default function Modal() {
       alert(
         `Something went wrong: ${
           err instanceof Error ? err.message : "Please try again."
-        }`
+        }`,
       );
     } finally {
       setLoading(false);
@@ -251,10 +264,10 @@ export default function Modal() {
 if (typeof window !== "undefined") {
   window.openModal = (
     context: "Contact" | "Tickets",
-    data?: { ticketUrl?: string; eventTitle?: string }
+    data?: { ticketUrl?: string; eventTitle?: string },
   ) => {
     window.dispatchEvent(
-      new CustomEvent("open-sira-modal", { detail: { context, ...data } })
+      new CustomEvent("open-sira-modal", { detail: { context, ...data } }),
     );
   };
 }

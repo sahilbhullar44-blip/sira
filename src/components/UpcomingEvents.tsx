@@ -13,7 +13,7 @@ import { format } from "date-fns";
 interface CustomWindow extends Window {
   openModal?: (
     action: string,
-    data?: { ticketUrl?: string; eventTitle?: string }
+    data?: { ticketUrl?: string; eventTitle?: string },
   ) => void;
 }
 
@@ -38,7 +38,10 @@ interface Event {
   ticketUrl?: string;
 }
 
+import { useAnalytics } from "@/hooks/useAnalytics";
+
 export default function UpcomingEvents() {
+  const { trackEvent } = useAnalytics();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -127,12 +130,12 @@ export default function UpcomingEvents() {
       gsap.fromTo(
         slideRef.current,
         { opacity: 0, x: 50 },
-        { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }
+        { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" },
       );
       gsap.fromTo(
         contentRef.current,
         { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.6, delay: 0.2, ease: "power2.out" }
+        { opacity: 1, y: 0, duration: 0.6, delay: 0.2, ease: "power2.out" },
       );
     }
   }, [currentSlide]);
@@ -226,13 +229,20 @@ export default function UpcomingEvents() {
                         </span>
                         <span className="text-white font-medium">{value}</span>
                       </div>
-                    )
+                    ),
                 )}
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <button
                   onClick={() => {
+                    trackEvent(
+                      "click",
+                      `event_${event.buttonAction.toLowerCase()}`,
+                      {
+                        event: event.title,
+                      },
+                    );
                     if (event.buttonAction === "Tickets") {
                       window.openModal?.("Tickets", {
                         ticketUrl: event.ticketUrl,

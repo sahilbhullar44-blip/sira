@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Syne } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/components/admin/QueryProvider";
+import AnalyticsProvider from "@/components/AnalyticsProvider";
 
 const syne = Syne({
   variable: "--font-syne",
@@ -26,7 +27,9 @@ export default function RootLayout({
       <body
         className={`${syne.variable} antialiased selection:bg-red-700 selection:text-white`}
       >
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AnalyticsProvider>{children}</AnalyticsProvider>
+        </QueryProvider>
       </body>
     </html>
   );

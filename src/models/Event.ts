@@ -22,6 +22,7 @@ export interface IEvent extends Document {
     status: "upcoming" | "past";
 
     ticketUrl?: string;
+    capacity?: number;
     themeColor?: string;
     createdAt: Date;
     updatedAt: Date;
@@ -50,6 +51,7 @@ const EventSchema = new Schema<IEvent>(
         contactInfo: { type: String },
 
         ticketUrl: { type: String },
+        capacity: { type: Number, default: 2000 },
         themeColor: { type: String, default: "red" },
         status: {
             type: String,

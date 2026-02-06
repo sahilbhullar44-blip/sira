@@ -1,9 +1,14 @@
 import axios from 'axios';
-import { IEvent } from '@/models/Event';
+import { IEvent as IMongooseEvent } from '@/models/Event';
 import { IInquiry } from '@/models/Inquiry';
 
+export interface IEvent extends IMongooseEvent {
+    ticketsSold?: number;
+    capacity?: number;
+}
+
 const apiClient = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_URL || 'http://localhost:3001',
+    baseURL: process.env.NEXT_PUBLIC_URL || 'http://localhost:3000',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -35,6 +40,32 @@ export async function deleteEvent(id: string): Promise<void> {
 
 export async function getInquiries(): Promise<IInquiry[]> {
     const { data } = await apiClient.get('/api/inquiries');
+    return data;
+}
+
+export interface DashboardStats {
+    users: number;
+    events: number;
+    inquiries: number;
+    ticketsSold: number;
+    totalVisits: number;
+    eventsData?: IEvent[];
+    recentInteractions: {
+        _id: string;
+        type: string;
+        action: string;
+        createdAt: string;
+    }[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
+}
+
+export async function getDashboardStats(page = 1, limit = 10): Promise<DashboardStats> {
+    const { data } = await apiClient.get(`/api/admin/stats?page=${page}&limit=${limit}`);
     return data;
 }
 
